@@ -24,6 +24,11 @@ namespace Application.UseCases.Advertisings.Commands.UpdateAdvertising
                 throw new NotFoundException(nameof(Advertisings), request.Id);
             }
 
+            if (entity.UserId != request.UserId)
+            {
+                throw new AccessDeniedException(nameof(Advertisings), request.Id.ToString());
+            }
+
             entity.Text = request.Text;
             entity.ImageUrl = request.ImageUrl;
 

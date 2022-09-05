@@ -26,6 +26,7 @@ namespace WebApi.UseCases.V1.Advertisings.UpdateAdvertising
         public async Task<ActionResult> Update([FromBody] UpdateAdvertisingRequest updateRequest)
         {
             var command = _mapper.Map<UpdateAdvertisingCommand>(updateRequest);
+            command.UserId = GetUserId();
 
             await Mediator.Send(command);
 

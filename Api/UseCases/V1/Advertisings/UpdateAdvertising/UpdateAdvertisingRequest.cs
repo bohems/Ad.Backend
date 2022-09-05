@@ -6,7 +6,7 @@ namespace WebApi.UseCases.V1.Advertisings.UpdateAdvertising
 {
     public class UpdateAdvertisingRequest : IMapWith<UpdateAdvertisingCommand>
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; }        
         public string Text { get; set; }
         public string? ImageUrl { get; set; }
 
@@ -19,8 +19,6 @@ namespace WebApi.UseCases.V1.Advertisings.UpdateAdvertising
                     opt => opt.MapFrom(updateRequest => updateRequest.Text))
                 .ForMember(updateCommand => updateCommand.ImageUrl,
                     opt => opt.MapFrom(updateRequest => updateRequest.ImageUrl));
-
-
         }
     }
 }
