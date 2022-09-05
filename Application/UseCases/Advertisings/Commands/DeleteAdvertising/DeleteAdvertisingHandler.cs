@@ -1,4 +1,6 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Exceptions;
+using Application.Interfaces;
+using Domain;
 using MediatR;
 
 namespace Application.UseCases.Advertisings.Commands.DeleteAdvertising
@@ -18,11 +20,18 @@ namespace Application.UseCases.Advertisings.Commands.DeleteAdvertising
             var entity = await _dbContext.Advertisings
                 .FindAsync(new object[] { request.Id }, cancellationToken);
 
-            if (entity != null || entity.UserId == request.UserId)
+            if (entity is null)
             {
-                _dbContext.Advertisings.Remove(entity);
-                await _dbContext.SaveChangesAsync(cancellationToken);
+                throw new NotFoundException(nameof(Advertising), request.Id);
             }
+
+            if (entity.UserId != request.UserId)
+            {
+                throw new AccessDeniedException(nameof(Advertising), request.Id.ToString());
+            }
+
+            _dbContext.Advertisings.Remove(entity);
+            await _dbContext.SaveChangesAsync(cancellationToken);            
 
             return Unit.Value;
         }

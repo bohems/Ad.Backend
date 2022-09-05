@@ -1,4 +1,6 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Exceptions;
+using Application.Interfaces;
+using Domain;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -29,13 +31,13 @@ namespace Application.UseCases.Users.Queries.LoginUser
 
             if (entity is null)
             {
-                // Exception: $"User with name {request.Username} is not found"
+                throw new NotFoundException(nameof(User), request.Username);
             }
 
             if (VerifyPasswordHash(request.Password, entity.PasswordHash, entity.PasswordSalt)
                 is not true)
             {
-                // Exception: $"Wrong password"
+                throw new WrongPasswordException();
             }
 
             string token = CreateToken(entity.Id, entity.Username);

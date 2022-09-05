@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Exceptions;
+using Application.Interfaces;
 using Domain;
 using MediatR;
 using System.Security.Cryptography;
@@ -19,9 +20,9 @@ namespace Application.UseCases.Users.Commands.CreateUser
         {
             var entity = _dbContext.Users.FirstOrDefault(user => user.Username == request.Username);
 
-            if (entity == null)
+            if (entity is not null)
             {
-                // Exception: $"User with name {request.Username} already exist"
+                throw new AlreadyExistException(nameof(User), request.Username);
             }
 
             CreatePasswordHash(request.Password,

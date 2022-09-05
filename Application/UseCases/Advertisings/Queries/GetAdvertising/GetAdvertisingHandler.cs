@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Exceptions;
+using Application.Interfaces;
 using Application.UseCases.Advertisings.Commands.CreateAdvertising;
 using AutoMapper;
 using MediatR;
@@ -24,6 +25,11 @@ namespace Application.UseCases.Advertisings.Queries.GetAdvertising
         {
             var entity = await _dbContext.Advertisings.
                 FirstOrDefaultAsync(ad => ad.Id == request.Id, cancellationToken);
+
+            if (entity == null)
+            {
+                throw new NotFoundException(nameof(Advertisings), request.Id);
+            }
 
             return _mapper.Map<GetAdvertisingResponse>(entity); 
         }

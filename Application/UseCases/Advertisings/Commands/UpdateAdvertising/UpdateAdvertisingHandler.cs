@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Application.Common.Exceptions;
 
 namespace Application.UseCases.Advertisings.Commands.UpdateAdvertising
 {
@@ -17,6 +18,11 @@ namespace Application.UseCases.Advertisings.Commands.UpdateAdvertising
         {
             var entity = await _dbContext.Advertisings.
                 FirstOrDefaultAsync(ad => ad.Id == request.Id, cancellationToken);
+
+            if (entity is null)
+            {
+                throw new NotFoundException(nameof(Advertisings), request.Id);
+            }
 
             entity.Text = request.Text;
             entity.ImageUrl = request.ImageUrl;
