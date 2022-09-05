@@ -16,11 +16,6 @@ namespace Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
-            modelBuilder.Entity<Advertising>()
-                .HasOne<User>()
-                .WithMany()
-                .HasForeignKey(advertising => advertising.UserId);
         }
     }
 }

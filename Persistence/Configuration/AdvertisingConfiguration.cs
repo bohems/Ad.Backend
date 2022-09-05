@@ -12,6 +12,10 @@ namespace Persistence.Configuration
 
             builder.HasIndex(advertising => advertising.Id)
                 .IsUnique();
+
+            builder.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(advertising => advertising.UserId);
         }
     }
 }
