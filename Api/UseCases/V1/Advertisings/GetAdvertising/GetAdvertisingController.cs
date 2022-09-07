@@ -15,7 +15,6 @@ namespace WebApi.UseCases.V1.Advertisings.GetAdvertising
         /// Gets advertising by id
         /// </summary>
         /// <returns>Returns <see cref="GetAdvertisingResponse" /></returns>
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<GetAdvertisingResponse>> Get(Guid id)
         {
