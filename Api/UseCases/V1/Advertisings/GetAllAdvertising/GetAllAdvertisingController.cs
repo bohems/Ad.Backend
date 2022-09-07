@@ -13,11 +13,11 @@ namespace WebApi.UseCases.V1.Advertisings.GetAllAdvertising
         /// Gets list of advertisings
         /// </summary>
         /// <returns>Returns <see cref="GetAdvertisingsCollection" /></returns>
-        [Authorize]
+        
         [HttpGet("GetAll")]
         public async Task<ActionResult<GetAdvertisingsCollection>> GetAll()
         {
-            GetAdvertisingsQuery query = new() { UserId = GetUserId() };
+            GetAdvertisingsQuery query = new();
             var advertisings = await Mediator.Send(query);
 
             return Ok(advertisings);

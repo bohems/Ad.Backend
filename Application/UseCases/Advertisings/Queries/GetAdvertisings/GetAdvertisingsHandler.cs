@@ -23,7 +23,7 @@ namespace Application.UseCases.Advertisings.Queries.GetAdvertisings
             CancellationToken cancellationToken)
         {
             var entity = _dbContext.Advertisings
-                .Where(ad => ad.UserId == request.UserId)
+                .Where(ad => ad != null)
                 .ProjectTo<GetAdvertisingsElement>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken).Result;
 
