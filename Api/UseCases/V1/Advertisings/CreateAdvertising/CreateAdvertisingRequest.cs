@@ -17,6 +17,6 @@ namespace WebApi.UseCases.V1.Advertisings.CreateAdvertising
                 .ForMember(createCommand => createCommand.ImageUrl,
                     opt => opt.MapFrom(createRequest => createRequest.ImageUrl));
         }
-
     }
 }
+ 

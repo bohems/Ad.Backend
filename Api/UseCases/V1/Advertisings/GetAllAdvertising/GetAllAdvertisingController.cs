@@ -1,6 +1,6 @@
 ﻿using Application.UseCases.Advertisings.Queries.GetAdvertisings;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sieve.Models;
 
 namespace WebApi.UseCases.V1.Advertisings.GetAllAdvertising
 {
@@ -13,11 +13,12 @@ namespace WebApi.UseCases.V1.Advertisings.GetAllAdvertising
         /// Gets list of advertisings
         /// </summary>
         /// <returns>Returns <see cref="GetAdvertisingsCollection" /></returns>
-        
+
         [HttpGet("GetAll")]
-        public async Task<ActionResult<GetAdvertisingsCollection>> GetAll()
+        public async Task<ActionResult<GetAdvertisingsCollection>> GetAll(
+            [FromQuery] SieveModel sieveModel)
         {
-            GetAdvertisingsQuery query = new();
+            GetAdvertisingsQuery query = new() { SieveModel = sieveModel };
             var advertisings = await Mediator.Send(query);
 
             return Ok(advertisings);

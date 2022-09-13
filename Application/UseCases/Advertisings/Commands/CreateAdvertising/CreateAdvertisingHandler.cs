@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.UseCases.Advertisings.Commands.CreateAdvertising
 {

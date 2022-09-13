@@ -1,7 +1,4 @@
-﻿using Application.UseCases.Advertisings.Commands.CreateAdvertising;
-using Application.UseCases.Advertisings.Queries.GetAdvertising;
-using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Application.UseCases.Advertisings.Queries.GetAdvertising;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.UseCases.V1.Advertisings.GetAdvertising
@@ -9,7 +6,7 @@ namespace WebApi.UseCases.V1.Advertisings.GetAdvertising
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/{version:apiVersion}/[controller]")]
-    sealed public class GetAdvertisingsController : CustomControllerBase
+    sealed public class GetAdvertisingController : CustomControllerBase
     {
         /// <summary>
         /// Gets advertising by id
