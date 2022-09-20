@@ -55,7 +55,7 @@ namespace Application.Common.Sieve
                 var containsMethodInfo = typeof(string).GetMethods().First(m =>
                     m.Name == "Contains" && m.GetParameters().Length == 1);
 
-                ,var containsMethod = Expression.Call(toStringMethod, containsMethodInfo, filterSearchValue);
+                var containsMethod = Expression.Call(toStringMethod, containsMethodInfo, filterSearchValue);
 
                 result = entity.Where(Expression.Lambda<Func<TEntity, bool>>(containsMethod, parameter))
                                     .Select(e => e);
