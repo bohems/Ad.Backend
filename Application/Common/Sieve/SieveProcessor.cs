@@ -47,19 +47,31 @@ namespace Application.Common.Sieve
             var entityProperties = typeof(TEntity).GetProperties();
 
             foreach (var property in entityProperties)
-            {
+            {                
                 var entityProperty = Expression.Property(parameter, property);
-
-                var toStringMethod = Expression.Call(entityProperty, nameof(object.ToString), null);
-
-                var containsMethodInfo = typeof(string).GetMethods().First(m =>
+                                
+                var containsMethodInfo = typeof(string).GetMethods().First(m => 
                     m.Name == "Contains" && m.GetParameters().Length == 1);
 
-                var containsMethod = Expression.Call(toStringMethod, containsMethodInfo, filterSearchValue);
+                MethodCallExpression containsMethod;
 
-                result = entity.Where(Expression.Lambda<Func<TEntity, bool>>(containsMethod, parameter))
-                                    .Select(e => e);
+                if (property.PropertyType.Name == nameof(String))
+                {
+                    containsMethod = Expression.Call(entityProperty, containsMethodInfo, filterSearchValue);
+                }
+                else
+                {
+                    var toStringMethod = Expression.Call(entityProperty, nameof(object.ToString), null);
+                    containsMethod = Expression.Call(toStringMethod, containsMethodInfo, filterSearchValue);
+                }
 
+                var matches = entity.Where(Expression.Lambda<Func<TEntity, bool>>(containsMethod, parameter));
+                                
+                if (matches.Count() > 0)
+                {
+                    if (entity.Any()) result = matches;
+                    else result.Concat(matches);
+                }
             }
 
             return result;
