@@ -46,6 +46,9 @@ namespace WebApi.Middleware
                 case WrongPasswordException:
                     code = HttpStatusCode.BadRequest;
                     break;
+                case LimitExceededException:
+                    code = HttpStatusCode.Conflict;
+                    break;
             }
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;

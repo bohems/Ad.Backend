@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using Application.Common.Sieve;
+using MediatR;
 
 namespace Application.UseCases.Advertisings.Queries.GetAdvertisings
 {
-    public class GetAdvertisingsQuery : IRequest<GetAdvertisingsCollection> 
+    public class GetAdvertisingsQuery : SieveModel, IRequest<GetAdvertisingsCollection> 
     {
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Application.Interfaces;
 using Domain;
 using MediatR;
+using Microsoft.Extensions.Configuration;
+using Application.Common.Exceptions;
 
 namespace Application.UseCases.Advertisings.Commands.CreateAdvertising
 {
@@ -8,15 +10,27 @@ namespace Application.UseCases.Advertisings.Commands.CreateAdvertising
         : IRequestHandler<CreateAdvertisingCommand, Guid>
     {
         private readonly IAdvertisementsDbContext _dbContext;
+        private readonly IConfiguration _configuration;
 
-        public CreateAdvertisingHandler(IAdvertisementsDbContext dbContext)
+        public CreateAdvertisingHandler(IAdvertisementsDbContext dbContext,
+            IConfiguration configuration)
         {
             _dbContext = dbContext;
+            _configuration = configuration;
         }
 
         public async Task<Guid> Handle(CreateAdvertisingCommand request, 
             CancellationToken cancellationToken)
         {
+            var userAdCount = _dbContext.Advertisings.Where(ad => ad.UserId == request.UserId).Count();
+
+            var maxAdCount = int.Parse(_configuration["MaxAdCount"]);
+
+            if (userAdCount > maxAdCount)
+            {
+                throw new LimitExceededException(nameof(Advertising), request.UserId.ToString());
+            }
+
             Advertising advertising = new()
             {
                 Id = Guid.NewGuid(),

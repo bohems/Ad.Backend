@@ -3,6 +3,7 @@ using MediatR;
 using System.Reflection;
 using FluentValidation;
 using Application.Common.Behaviors;
+using Application.Common.Sieve;
 
 namespace Application
 {
@@ -14,6 +15,7 @@ namespace Application
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssemblies(new[] { Assembly.GetExecutingAssembly() });
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            services.AddScoped<SieveProcessor>();
 
             return services;
         }
