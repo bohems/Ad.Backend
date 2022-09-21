@@ -25,9 +25,7 @@ namespace Application.Common.Sieve
                 result = ApplySorting(sieveModel, result);
             }
 
-            var paginedList = ApplyPaggination(sieveModel, result);
-
-            return paginedList;
+            return GetPagedList(sieveModel, result);
         }
 
         private IQueryable<TEntity> ApplySearching<TEntity>(SieveModel sieveModel,
@@ -164,13 +162,13 @@ namespace Application.Common.Sieve
             return result;
         }
 
-        private PagedList<TEntity> ApplyPaggination<TEntity>(SieveModel sieveModel, IQueryable<TEntity> entity)
+        private PagedList<TEntity> GetPagedList<TEntity>(SieveModel sieveModel, IQueryable<TEntity> entity)
         {
-            var currentPage = sieveModel?.Page ?? 1;
-            var pageSize = sieveModel?.PageSize ?? 10;
-
             var count = entity.Count();
 
+            var currentPage = sieveModel?.Page ?? 1;
+            var pageSize = sieveModel?.PageSize ?? count;
+                        
             entity = entity.Skip((currentPage - 1) * pageSize).Take(pageSize);
 
             var pagedList = new PagedList<TEntity>(entity, currentPage, pageSize, count);

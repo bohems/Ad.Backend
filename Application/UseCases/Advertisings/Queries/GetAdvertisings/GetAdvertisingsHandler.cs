@@ -27,21 +27,17 @@ namespace Application.UseCases.Advertisings.Queries.GetAdvertisings
         {
             var entity = _dbContext.Advertisings.AsNoTracking();
 
-            var paginedList = _sieveProcessor.Apply(request, entity);
+            var advertisingsElement = entity
+                .ProjectTo<GetAdvertisingsElement>(_mapper.ConfigurationProvider);
+                
+            var pagedList = _sieveProcessor.Apply(request, advertisingsElement);
 
-            entity = paginedList.Items;
-
-            var result = entity
-                .ProjectTo<GetAdvertisingsElement>(_mapper.ConfigurationProvider)
-                .ToListAsync(cancellationToken).Result;
-
-            return new GetAdvertisingsCollection
+            var advertisingsCollection = new GetAdvertisingsCollection()
             {
-                Advertisings = result,
-                CurrentPage = paginedList.CurrentPage,
-                PageSize = paginedList.PageSize,
-                TotalCount = paginedList.TotalCount
+                PagedList = pagedList
             };
+                         
+            return advertisingsCollection;
         }
     }
 }
