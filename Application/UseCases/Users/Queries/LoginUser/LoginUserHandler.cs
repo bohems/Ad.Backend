@@ -13,10 +13,10 @@ namespace Application.UseCases.Users.Queries.LoginUser
     public class LoginUserHandler
         : IRequestHandler<LoginUserQuery, string>
     {
-        private readonly IAdvertisementsDbContext _dbContext;
+        private readonly IApplicationDbContext _dbContext;
         private readonly IConfiguration _configuration;
 
-        public LoginUserHandler(IAdvertisementsDbContext dbContext, 
+        public LoginUserHandler(IApplicationDbContext dbContext, 
             IConfiguration configuration)
         {
             _dbContext = dbContext;

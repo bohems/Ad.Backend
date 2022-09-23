@@ -67,7 +67,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
 builder.Services.AddAutoMapper(config =>
 {
     config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
-    config.AddProfile(new AssemblyMappingProfile(typeof(IAdvertisementsDbContext).Assembly));
+    config.AddProfile(new AssemblyMappingProfile(typeof(IApplicationDbContext).Assembly));
 });
 
 var app = builder.Build();
@@ -80,7 +80,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCustomExceptionHandler();
 
-app.ApplyMigration<AdvertisementsDbContext>();
+app.ApplyMigration<AdDbContext>();
 
 app.UseHttpsRedirection();
 

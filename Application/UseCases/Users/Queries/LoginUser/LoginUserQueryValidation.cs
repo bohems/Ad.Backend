@@ -6,10 +6,10 @@ namespace Application.UseCases.Users.Queries.LoginUser
     {
         public LoginUserQueryValidation()
         {
-            RuleFor(loginUserQuery =>
-                loginUserQuery.Username).NotEmpty();
-            RuleFor(loginUserQuery =>
-                loginUserQuery.Password).NotEmpty();
+            RuleFor(query =>
+                query.Username).NotEmpty();
+            RuleFor(query =>
+                query.Password).NotEmpty();
         }
     }
 }

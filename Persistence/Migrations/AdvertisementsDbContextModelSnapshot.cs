@@ -10,7 +10,7 @@ using Persistence;
 
 namespace Persistence.Migrations
 {
-    [DbContext(typeof(AdvertisementsDbContext))]
+    [DbContext(typeof(AdDbContext))]
     partial class AdvertisementsDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -22,7 +22,7 @@ namespace Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Domain.Advertising", b =>
+            modelBuilder.Entity("Domain.Ad", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,7 +57,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Advertisings");
+                    b.ToTable("Ads");
                 });
 
             modelBuilder.Entity("Domain.User", b =>
@@ -90,7 +90,7 @@ namespace Persistence.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Domain.Advertising", b =>
+            modelBuilder.Entity("Domain.Ad", b =>
                 {
                     b.HasOne("Domain.User", null)
                         .WithMany()

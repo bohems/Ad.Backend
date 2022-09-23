@@ -12,13 +12,20 @@ namespace Persistence
         {
             string connectionString = configuration["PersistenceModule:DefaultConnection"];
 
-            services.AddDbContext<AdvertisementsDbContext>(options =>
+            services.AddDbContext<AdDbContext>(options =>
                 options.UseSqlServer(connectionString));
-              
-            services.AddScoped<IAdvertisementsDbContext>(provider =>
-                provider.GetService<AdvertisementsDbContext>());
+
+            services.AddScoped<IApplicationDbContext>(provider =>
+                provider.GetService<AdDbContext>());
 
             return services;
+        }
+
+        public class PersistenceModuleOptions
+        {
+            public const string PersistenceModule = "PersistenceModule";
+
+            public string DefaultConnection { get; set; } = string.Empty;
         }
     }
 }

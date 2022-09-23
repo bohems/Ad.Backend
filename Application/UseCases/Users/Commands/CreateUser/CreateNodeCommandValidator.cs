@@ -6,10 +6,10 @@ namespace Application.UseCases.Users.Commands.CreateUser
     {
         public CreateNodeCommandValidator()
         {
-            RuleFor(createUserCommand =>
-                createUserCommand.Username).NotEmpty().MaximumLength(20);
-            RuleFor(createUserCommand =>
-                createUserCommand.Password).NotEmpty();
+            RuleFor(command =>
+                command.Username).NotEmpty().MaximumLength(20);
+            RuleFor(command =>
+                command.Password).NotEmpty();
         }
     }
 }

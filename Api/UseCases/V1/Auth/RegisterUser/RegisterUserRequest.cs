@@ -12,10 +12,10 @@ namespace WebApi.UseCases.V1.Auth.RegisterUser
         public void Mapping(Profile profile)
         {
             profile.CreateMap<RegisterUserRequest, CreateUserCommand>()
-                .ForMember(registerCommand => registerCommand.Username,
-                    opt => opt.MapFrom(registerRequest => registerRequest.Username))
-                .ForMember(registerCommand => registerCommand.Password,
-                    opt => opt.MapFrom(registerRequest => registerRequest.Password));
+                .ForMember(command => command.Username,
+                    opt => opt.MapFrom(request => request.Username))
+                .ForMember(command => command.Password,
+                    opt => opt.MapFrom(request => request.Password));
         }
     }
 }

@@ -9,9 +9,9 @@ namespace Application.UseCases.Users.Commands.CreateUser
     public class CreateUserHandler
         : IRequestHandler<CreateUserCommand>
     {
-        private readonly IAdvertisementsDbContext _dbContext;
+        private readonly IApplicationDbContext _dbContext;
 
-        public CreateUserHandler(IAdvertisementsDbContext dbContext)
+        public CreateUserHandler(IApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
