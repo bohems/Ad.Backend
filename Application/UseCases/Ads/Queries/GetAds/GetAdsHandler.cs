@@ -1,23 +1,22 @@
 ﻿using Application.Common.Sieve;
-using Application.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Domain;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.UseCases.Ads.Queries.GetAds
 {
     public class GetAdsHandler
         : IRequestHandler<GetAdsQuery, GetAdCollection>
     {
-        private readonly IApplicationDbContext _dbContext;
+        private readonly IAdRepository _repository;
         private readonly IMapper _mapper;
         private readonly SieveProcessor _sieveProcessor;
 
-        public GetAdsHandler(IApplicationDbContext dbContext,
+        public GetAdsHandler(IAdRepository repository,
             IMapper mapper, SieveProcessor sieveProcessor)
         {
-            _dbContext = dbContext;
+            _repository = repository;
             _mapper = mapper;
             _sieveProcessor = sieveProcessor;
         }
@@ -25,18 +24,18 @@ namespace Application.UseCases.Ads.Queries.GetAds
         public async Task<GetAdCollection> Handle(GetAdsQuery request,
             CancellationToken cancellationToken)
         {
-            var entity = _dbContext.Ads.AsNoTracking();
+            var entity = _repository.GetAllAds();
 
             var adElement = entity
                 .ProjectTo<GetAdElement>(_mapper.ConfigurationProvider);
-                
+
             var pagedList = _sieveProcessor.Apply(request, adElement);
 
             var adCollection = new GetAdCollection()
             {
                 PagedList = pagedList
             };
-                         
+
             return adCollection;
         }
     }

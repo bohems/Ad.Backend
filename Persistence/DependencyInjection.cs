@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
+﻿using Application.Common;
+using Domain;
 using Microsoft.EntityFrameworkCore;
-using Application.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Persistence
 {
@@ -10,22 +11,18 @@ namespace Persistence
         public static IServiceCollection AddPersistence(this IServiceCollection services,
             IConfiguration configuration)
         {
+            services.Configure<UserOptions>(configuration.GetSection(UserOptions.User));
+            services.Configure<JwtSettingsOptions>(configuration.GetSection(JwtSettingsOptions.JwtSettings));
+
             string connectionString = configuration["PersistenceModule:DefaultConnection"];
 
-            services.AddDbContext<AdDbContext>(options =>
+            services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            services.AddScoped<IApplicationDbContext>(provider =>
-                provider.GetService<AdDbContext>());
+            services.AddScoped<IAdRepository, AdRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             return services;
-        }
-
-        public class PersistenceModuleOptions
-        {
-            public const string PersistenceModule = "PersistenceModule";
-
-            public string DefaultConnection { get; set; } = string.Empty;
         }
     }
 }

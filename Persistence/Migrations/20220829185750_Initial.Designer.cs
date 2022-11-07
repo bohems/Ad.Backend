@@ -11,7 +11,7 @@ using Persistence;
 
 namespace Persistence.Migrations
 {
-    [DbContext(typeof(AdDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20220829185750_Initial")]
     partial class Initial
     {

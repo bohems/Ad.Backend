@@ -1,36 +1,28 @@
-﻿using Application.Interfaces;
+﻿using Application.Common;
+using Application.Common.Exceptions;
 using Domain;
 using MediatR;
-using Microsoft.Extensions.Configuration;
-using Application.Common.Exceptions;
+using Microsoft.Extensions.Options;
+using System.Data;
 
 namespace Application.UseCases.Ads.Commands.CreateAd
 {
     public class CreateAdHandler
         : IRequestHandler<CreateAdCommand, Guid>
     {
-        private readonly IApplicationDbContext _dbContext;
-        private readonly IConfiguration _configuration;
+        private readonly IAdRepository _repository;
+        private readonly UserOptions _userOptions;
 
-        public CreateAdHandler(IApplicationDbContext dbContext,
-            IConfiguration configuration)
+        public CreateAdHandler(IAdRepository adRepository, IOptions<UserOptions> options)
         {
-            _dbContext = dbContext;
-            _configuration = configuration;
+            _repository = adRepository;
+            _userOptions = options.Value;
+
         }
 
-        public async Task<Guid> Handle(CreateAdCommand request, 
+        public async Task<Guid> Handle(CreateAdCommand request,
             CancellationToken cancellationToken)
         {
-            var userAdCount = _dbContext.Ads.Where(ad => ad.UserId == request.UserId).Count();
-
-            var maxAdCount = int.Parse(_configuration["MaxAdCount"]);
-
-            if (userAdCount > maxAdCount)
-            {
-                throw new LimitExceededException(nameof(Ad), request.UserId.ToString());
-            }
-
             Ad ad = new()
             {
                 Id = Guid.NewGuid(),
@@ -43,8 +35,21 @@ namespace Application.UseCases.Ads.Commands.CreateAd
                 UserId = request.UserId
             };
 
-            await _dbContext.Ads.AddAsync(ad, cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            using var transaction = _repository.BeginTransaction(IsolationLevel.ReadUncommitted);
+
+            await _repository.CreateAdAsync(ad, cancellationToken);
+
+            await _repository.SaveAsync(cancellationToken);
+
+            var count = await _repository.CountAsync(cancellationToken);
+
+            if (count > _userOptions.MaxAdsCount)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                throw new LimitExceededException(nameof(Ad), ad.UserId.ToString());
+            }
+
+            else await transaction.CommitAsync(cancellationToken);
 
             return ad.Id;
         }

@@ -1,6 +1,5 @@
 using Application;
 using Application.Common.Mappings;
-using Application.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -21,7 +20,7 @@ builder.Services.AddVersionedApiExplorer(options =>
     options.GroupNameFormat = "'v'VVV";
 });
 
-builder.Services.AddApplication();
+builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddPersistence(builder.Configuration);
 
 builder.Services.AddSwaggerGen(options =>
@@ -52,7 +51,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            
+
             ValidateIssuer = false,
             ValidateAudience = false,
             ValidateIssuerSigningKey = true,
@@ -60,14 +59,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
             ValidAudience = builder.Configuration["JwtSettings:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"])),
-            
+
         };
     });
 
 builder.Services.AddAutoMapper(config =>
 {
     config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
-    config.AddProfile(new AssemblyMappingProfile(typeof(IApplicationDbContext).Assembly));
+    config.AddProfile(new AssemblyMappingProfile(typeof(AssemblyMappingProfile).Assembly));
 });
 
 var app = builder.Build();
@@ -80,16 +79,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseCustomExceptionHandler();
 
-app.ApplyMigration<AdDbContext>();
+app.ApplyMigration<AppDbContext>();
 
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
- 
+
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
-
-

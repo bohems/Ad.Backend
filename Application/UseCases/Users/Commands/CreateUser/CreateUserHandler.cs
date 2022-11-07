@@ -1,5 +1,4 @@
 ﻿using Application.Common.Exceptions;
-using Application.Interfaces;
 using Domain;
 using MediatR;
 using System.Security.Cryptography;
@@ -9,24 +8,25 @@ namespace Application.UseCases.Users.Commands.CreateUser
     public class CreateUserHandler
         : IRequestHandler<CreateUserCommand>
     {
-        private readonly IApplicationDbContext _dbContext;
+        private readonly IUserRepository _userRepository;
 
-        public CreateUserHandler(IApplicationDbContext dbContext)
+        public CreateUserHandler(IUserRepository userRepository)
         {
-            _dbContext = dbContext;
+            _userRepository = userRepository;
         }
 
-        public async Task<Unit> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CreateUserCommand request,
+            CancellationToken cancellationToken)
         {
-            var entity = _dbContext.Users.FirstOrDefault(user => user.Username == request.Username);
+            var entity = _userRepository.GetUserByUsernameAsync(request.Username,
+                cancellationToken);
 
-            if (entity is not null)
+            if (entity.Result is not null)
             {
                 throw new AlreadyExistException(nameof(User), request.Username);
             }
 
-            CreatePasswordHash(request.Password,
-                out byte[] passwordHash, out byte[] passwordSalt);
+            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
             User user = new()
             {
@@ -37,8 +37,8 @@ namespace Application.UseCases.Users.Commands.CreateUser
                 PasswordSalt = passwordSalt
             };
 
-            await _dbContext.Users.AddAsync(user);
-            await _dbContext.SaveChangesAsync();
+            await _userRepository.AddUserAsync(user, cancellationToken);
+            await _userRepository.SaveAsync(cancellationToken);
 
             return Unit.Value;
         }

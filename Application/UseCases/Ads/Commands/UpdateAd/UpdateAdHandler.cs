@@ -1,26 +1,22 @@
-﻿using Application.Interfaces;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Application.Common.Exceptions;
+﻿using Application.Common.Exceptions;
 using Domain;
+using MediatR;
 
 namespace Application.UseCases.Ads.Commands.UpdateAd
 {
     public class UpdateAdHandler : IRequestHandler<UpdateAdCommand>
     {
-        private readonly IApplicationDbContext _dbContext;
-
-        public UpdateAdHandler(IApplicationDbContext dbContext)
+        private readonly IAdRepository _repository;
+        public UpdateAdHandler(IAdRepository repository)
         {
-            _dbContext = dbContext;
+            _repository = repository;
         }
 
         public async Task<Unit> Handle(UpdateAdCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _dbContext.Ads.
-                FirstOrDefaultAsync(ad => ad.Id == request.Id, cancellationToken);
+            var entity = await _repository.GetAdByIdAsync(request.Id, cancellationToken);
 
-            if (entity is null)
+            if (entity == null)
             {
                 throw new NotFoundException(nameof(Ad), request.Id);
             }
@@ -30,10 +26,7 @@ namespace Application.UseCases.Ads.Commands.UpdateAd
                 throw new AccessDeniedException(nameof(Ad), request.Id.ToString());
             }
 
-            entity.Text = request.Text;
-            entity.ImageUrl = request.ImageUrl;
-
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await _repository.UpdateAdAsync(entity, cancellationToken);
 
             return Unit.Value;
         }

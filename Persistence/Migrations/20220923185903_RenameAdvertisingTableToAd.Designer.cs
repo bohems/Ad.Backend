@@ -11,7 +11,7 @@ using Persistence;
 
 namespace Persistence.Migrations
 {
-    [DbContext(typeof(AdDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20220923185903_RenameAdvertisingTableToAd")]
     partial class RenameAdvertisingTableToAd
     {

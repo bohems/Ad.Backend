@@ -10,7 +10,7 @@ using Persistence;
 
 namespace Persistence.Migrations
 {
-    [DbContext(typeof(AdDbContext))]
+    [DbContext(typeof(AppDbContext))]
     partial class AdvertisementsDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -57,7 +57,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Ads");
+                    b.ToTable("Ads", (string)null);
                 });
 
             modelBuilder.Entity("Domain.User", b =>
@@ -87,7 +87,7 @@ namespace Persistence.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Ad", b =>

@@ -2,9 +2,9 @@
 
 namespace Application.UseCases.Users.Commands.CreateUser
 {
-    public class CreateNodeCommandValidator : AbstractValidator<CreateUserCommand>
+    public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
     {
-        public CreateNodeCommandValidator()
+        public CreateUserCommandValidator()
         {
             RuleFor(command =>
                 command.Username).NotEmpty().MaximumLength(20);

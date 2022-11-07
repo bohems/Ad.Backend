@@ -10,7 +10,6 @@ namespace WebApi.UseCases.V1.Ads.GetAds
     public class GetAdsController : CustomControllerBase
     {
         private IMapper _mapper;
-
         public GetAdsController(IMapper mapper)
         {
             _mapper = mapper;
@@ -21,7 +20,7 @@ namespace WebApi.UseCases.V1.Ads.GetAds
         /// <returns>Returns <see cref="GetAdCollection" /></returns>
 
         [HttpGet("GetAll")]
-        public async Task<ActionResult<GetAdCollection>> 
+        public async Task<ActionResult<GetAdCollection>>
             GetAdvertisings([FromQuery] GetAdsRequest request)
         {
             var query = _mapper.Map<GetAdsQuery>(request);

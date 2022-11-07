@@ -1,30 +1,27 @@
 ﻿using Application.Common.Exceptions;
-using Application.Interfaces;
 using AutoMapper;
 using Domain;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.UseCases.Ads.Queries.GetAd
 {
     public class GetAdHandler 
         : IRequestHandler<GetAdQuery, GetAdResponse>
     {
-        private readonly IApplicationDbContext _dbContext;
+        private readonly IAdRepository _repository;
         private readonly IMapper _mapper;
 
-        public GetAdHandler(IApplicationDbContext dbContext,
+        public GetAdHandler(IAdRepository repository,
             IMapper mapper)
         {
-            _dbContext = dbContext;
+            _repository = repository;
             _mapper = mapper;
         }
 
         public async Task<GetAdResponse> Handle(GetAdQuery request,
             CancellationToken cancellationToken)
         {
-            var entity = await _dbContext.Ads.
-                FirstOrDefaultAsync(ad => ad.Id == request.Id, cancellationToken);
+            var entity = await _repository.GetAdByIdAsync(request.Id, cancellationToken);
 
             if (entity == null)
             {

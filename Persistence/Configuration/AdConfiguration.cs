@@ -13,9 +13,18 @@ namespace Persistence.Configuration
             builder.HasIndex(ad => ad.Id)
                 .IsUnique();
 
+            builder.HasIndex(ad => ad.Number);
+
+            builder.HasIndex(ad => ad.Rating);
+
+            builder.HasIndex(ad => ad.CreationDate);
+
+            builder.HasIndex(ad => ad.ExpiryDate);
+
             builder.HasOne<User>()
                 .WithMany()
                 .HasForeignKey(ad => ad.UserId);
+
         }
     }
 }
